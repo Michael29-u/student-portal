@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Student Portal - Students Index{% endblock %}
+
+{% block content %}
+<main>
+    <section class="table-section">
+        <div class="container">
+            <h2>Registered Students</h2>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            {% if students %}
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Program</th>
+                                <th>GPA</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ student.first_name }} {{ student.last_name }}</td>
+                                    <td>{{ student.email }}</td>
+                                    <td>{{ student.program }}</td>
+                                    <td>{{ student.gpa }}</td>
+                                    <td>{{ student.status }}</td>
+                                    <td>
+                                        <a href="{{ url_for('student_details', student_id=student.id) }}" class="btn btn-small">View</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="no-data">No students registered yet.</p>
+            {% endif %}
+        </div>
+    </section>
+</main>
+{% endblock %}

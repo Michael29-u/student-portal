@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Student Portal - Student Details{% endblock %}
+
+{% block content %}
+<main>
+    <section class="details-section">
+        <div class="container">
+            <a href="{{ url_for('index') }}" class="btn btn-back">&larr; Back to Students</a>
+            <div class="student-card">
+                <div class="student-image">
+                    {% if student.image %}
+                        <img src="{{ url_for('static', filename='uploads/' + student.image) }}" alt="{{ student.first_name }}">
+                    {% else %}
+                        <img src="https://via.placeholder.com/200x200/cccccc/666666?text=No+Image" alt="No Image">
+                    {% endif %}
+                </div>
+                <div class="student-info">
+                    <h2>{{ student.first_name }} {{ student.last_name }}</h2>
+                    <div class="info-section">
+                        <h3>Personal Information</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Email:</span>
+                                <span class="info-value">{{ student.email }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Address:</span>
+                                <span class="info-value">{{ student.address }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">City:</span>
+                                <span class="info-value">{{ student.city }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Country:</span>
+                                <span class="info-value">{{ student.country }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Date of Birth:</span>
+                                <span class="info-value">{{ student.dob }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Gender:</span>
+                                <span class="info-value">{{ student.gender }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-section">
+                        <h3>Other Information</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Phone:</span>
+                                <span class="info-value">{{ student.phone or 'N/A' }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Admission Status:</span>
+                                <span class="info-value status-{{ student.status|lower }}">{{ student.status }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-section">
+                        <h3>Academics Related Information</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Program:</span>
+                                <span class="info-value">{{ student.program }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Student ID:</span>
+                                <span class="info-value">{{ student.student_id }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">GPA:</span>
+                                <span class="info-value">{{ student.gpa }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="status-form">
+                        <h3>Update Admission Status</h3>
+                        <form id="statusForm" action="{{ url_for('update_status', student_id=student.id) }}" method="POST">
+                            <select id="statusSelect" name="status" required>
+                                <option value="Pending" {% if student.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="Accepted" {% if student.status == 'Accepted' %}selected{% endif %}>Accepted</option>
+                                <option value="Rejected" {% if student.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary">Update Status</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/details.js') }}"></script>
+{% endblock %}

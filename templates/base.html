@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Student Portal{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="{{ url_for('landing') }}" class="logo">Student Portal</a>
+            {% if request.endpoint == 'landing' %}
+            {% else %}
+                <ul class="nav-links nav-left">
+                    <li><a href="{{ url_for('landing') }}" {% if request.endpoint == 'landing' %}class="active"{% endif %}>Home</a></li>
+                </ul>
+            {% endif %}
+            <ul class="nav-links nav-right">
+                <li><a href="{{ url_for('form') }}" class="btn btn-nav">Get Started</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Student Portal. All rights reserved.</p>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Student Portal - Home{% endblock %}
+
+{% block content %}
+<main>
+    <section class="intro">
+        <div class="container">
+            <div class="intro-content">
+                <div class="intro-text">
+                    <h1 class="intro-title">Welcome to Student Portal</h1>
+                    <p class="intro-description">A simple and efficient way to manage student information. Register students, view their details, and track their admission status all in one place.</p>
+                    <a href="{{ url_for('form') }}" class="btn btn-primary">Get Started</a>
+                </div>
+                <div class="intro-image">
+                    <img src="{{ url_for('static', filename='img/student.webp') }}" alt="Student Portal">
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}
