@@ -5,10 +5,12 @@ from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.config['UPLOAD_FOLDER'] = os.path.join(app.static_folder, 'uploads')
 app.config['DATABASE'] = 'students.db'
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -40,6 +42,7 @@ def init_db():
                 city TEXT NOT NULL,
                 country TEXT NOT NULL,
                 dob DATE NOT NULL,
+                age INTEGER NOT NULL,
                 gender TEXT NOT NULL,
                 program TEXT NOT NULL,
                 student_id TEXT NOT NULL,
@@ -52,6 +55,11 @@ def init_db():
         db.commit()
         try:
             db.execute('ALTER TABLE students ADD COLUMN country TEXT NOT NULL DEFAULT "Unknown"')
+            db.commit()
+        except Exception:
+            pass
+        try:
+            db.execute('ALTER TABLE students ADD COLUMN age INTEGER NOT NULL DEFAULT 0')
             db.commit()
         except Exception:
             pass
@@ -85,6 +93,7 @@ def submit():
         city = request.form.get('city', '').strip()
         country = request.form.get('country', '').strip()
         dob = request.form.get('dob', '').strip()
+        age = request.form.get('age', '').strip()
         gender = request.form.get('gender', '').strip()
         program = request.form.get('program', '').strip()
         student_id = request.form.get('student_id', '').strip()
@@ -98,6 +107,7 @@ def submit():
             'city': city,
             'country': country,
             'dob': dob,
+            'age': age,
             'gender': gender,
             'program': program,
             'student_id': student_id,
@@ -117,6 +127,15 @@ def submit():
             flash('GPA must be a valid number.', 'error')
             return redirect(url_for('form'))
 
+        try:
+            age_int = int(age)
+            if age_int < 1 or age_int > 120:
+                flash('Age must be between 1 and 120.', 'error')
+                return redirect(url_for('form'))
+        except ValueError:
+            flash('Age must be a valid number.', 'error')
+            return redirect(url_for('form'))
+
         image = request.files.get('image')
         image_filename = None
         if image and image.filename:
@@ -132,9 +151,9 @@ def submit():
 
         db = get_db()
         db.execute('''
-            INSERT INTO students (first_name, last_name, email, phone, address, city, country, dob, gender, program, student_id, gpa, image)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (first_name, last_name, email, phone, address, city, country, dob, gender, program, student_id, gpa_float, image_filename))
+            INSERT INTO students (first_name, last_name, email, phone, address, city, country, dob, age, gender, program, student_id, gpa, image)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (first_name, last_name, email, phone, address, city, country, dob, age_int, gender, program, student_id, gpa_float, image_filename))
         db.commit()
         flash('Student registered successfully!', 'success')
         return redirect(url_for('index'))
@@ -171,3 +190,5 @@ def update_status(student_id):
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)
+
+

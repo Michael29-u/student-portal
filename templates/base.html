@@ -10,14 +10,11 @@
     <nav class="navbar">
         <div class="container">
             <a href="{{ url_for('landing') }}" class="logo">Student Portal</a>
-            {% if request.endpoint == 'landing' %}
-            {% else %}
-                <ul class="nav-links nav-left">
-                    <li><a href="{{ url_for('landing') }}" {% if request.endpoint == 'landing' %}class="active"{% endif %}>Home</a></li>
-                </ul>
-            {% endif %}
+            <ul class="nav-links nav-left">
+                <li><a href="{{ url_for('landing') }}" {% if request.endpoint == 'landing' %}class="active"{% endif %}>Home</a></li>
+            </ul>
             <ul class="nav-links nav-right">
-                <li><a href="{{ url_for('form') }}" class="btn btn-nav">Get Started</a></li>
+                <li><a href="{{ url_for('form') }}" {% if request.endpoint == 'form' %}class="active"{% endif %}>Get Started</a></li>
             </ul>
         </div>
     </nav>
